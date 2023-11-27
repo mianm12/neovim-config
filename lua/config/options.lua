@@ -14,22 +14,6 @@ vim.g.autoformat = true
 -- * a function with signature `function(buf) -> string|string[]`
 vim.g.root_spec = { "lsp", { ".git", "lua" }, "cwd" }
 
--- Use the Windows clipboard from WSL
-if vim.fn.has('wsl') then
-    vim.g.clipboard = {
-        name = "WslClipboard",
-        copy = {
-            ["+"] = "clip.exe",
-            ["-"] = "clip.exe",
-        },
-        paste = {
-            ["+"] = "powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace(\"`r\", \"\"))",
-            ["-"] = "powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace(\"`r\", \"\"))",
-        },
-        cache_enable = 0,
-    }
-end
-
 local opt = vim.opt
 
 opt.autoindent = true -- 自动缩进(根据上行)
@@ -119,3 +103,19 @@ vim.o.formatexpr = "v:lua.require'lazyvim.util'.format.formatexpr()"
 
 -- 修正 markdown 缩进设置
 vim.g.markdown_recommended_style = 0
+
+-- Use the Windows clipboard from WSL
+if vim.fn.has('wsl') then
+    vim.g.clipboard = {
+        name = "WslClipboard",
+        copy = {
+            ["+"] = "clip.exe",
+            ["-"] = "clip.exe",
+        },
+        paste = {
+            ["+"] = "powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace(\"`r\", \"\"))",
+            ["-"] = "powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace(\"`r\", \"\"))",
+        },
+        cache_enable = 0,
+    }
+end
