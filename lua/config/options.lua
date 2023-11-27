@@ -14,6 +14,22 @@ vim.g.autoformat = true
 -- * a function with signature `function(buf) -> string|string[]`
 vim.g.root_spec = { "lsp", { ".git", "lua" }, "cwd" }
 
+-- Use the Windows clipboard from WSL
+if vim.fn.has('wsl') then
+    vim.g.clipboard = {
+        name = "WslClipboard",
+        copy = {
+            ["+"] = "clip.exe",
+            ["-"] = "clip.exe",
+        },
+        paste = {
+            ["+"] = "powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace(\"`r\", \"\"))",
+            ["-"] = "powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace(\"`r\", \"\"))",
+        },
+        cache_enable = 0,
+    }
+end
+
 local opt = vim.opt
 
 opt.autoindent = true -- 自动缩进(根据上行)
@@ -77,19 +93,19 @@ if vim.fn.has("nvim-0.10") == 1 then
 end
 
 -- Folding
-vim.opt.foldlevel = 99
-vim.opt.foldtext = "v:lua.require'lazyvim.util'.ui.foldtext()"
+opt.foldlevel = 99
+opt.foldtext = "v:lua.require'lazyvim.util'.ui.foldtext()"
 
 if vim.fn.has("nvim-0.9.0") == 1 then
-  vim.opt.statuscolumn = [[%!v:lua.require'lazyvim.util'.ui.statuscolumn()]]
+  opt.statuscolumn = [[%!v:lua.require'lazyvim.util'.ui.statuscolumn()]]
 end
 
 -- HACK: causes freezes on <= 0.9, so only enable on >= 0.10 for now
 if vim.fn.has("nvim-0.10") == 1 then
-  vim.opt.foldmethod = "expr"
-  vim.opt.foldexpr = "v:lua.require'lazyvim.util'.ui.foldexpr()"
+  opt.foldmethod = "expr"
+  opt.foldexpr = "v:lua.require'lazyvim.util'.ui.foldexpr()"
 else
-  vim.opt.foldmethod = "indent"
+  opt.foldmethod = "indent"
 end
 
 
